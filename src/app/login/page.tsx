@@ -1,8 +1,9 @@
-import { NextPage } from 'next';
 import React from 'react';
+import { NextPage } from 'next';
+import Login from '@/features/login/components/Login';
 
 const LoginPage: NextPage = () => {
-  return <div>page</div>;
+  return <Login />;
 };
 
 export default LoginPage;

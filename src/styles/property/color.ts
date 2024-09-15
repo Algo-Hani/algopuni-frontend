@@ -3,9 +3,10 @@ export const color = {
   text: '#1E1E1E',
   base: '#14142C',
   sub_primary: '#07A9AC',
-  outline: '#F9F8FF',
+  outline: '#EDEDED',
   hint: '#A9A9A9',
   placeholder: '#CCCCCC',
+  white: '#FFFFFF',
 } as const;
 
 export type ColorType = typeof color;

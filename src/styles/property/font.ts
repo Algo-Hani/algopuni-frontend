@@ -1,64 +1,68 @@
 import { css } from 'styled-components';
 
 export const font = {
-  title_lg: () => css`
+  bold_28: () => css`
     font-weight: 700;
     font-size: 2.8rem;
     line-height: normal;
     font-family: var(--font-spoqa-bold);
-    @media ${({ theme }) => theme.device.pc} {
-      font-size: 2rem;
-    }
   `,
-  title_md: () => css`
+  bold_24: () => css`
     font-weight: 700;
     font-size: 2.4rem;
     line-height: normal;
     font-family: var(--font-spoqa-bold);
-    @media ${({ theme }) => theme.device.pc} {
-      font-size: 1.8rem;
-    }
   `,
-  title_sm: () => css`
+  bold_20: () => css`
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-bold);
+  `,
+  bold_18: () => css`
     font-weight: 700;
     font-size: 1.8rem;
     line-height: normal;
     font-family: var(--font-spoqa-bold);
-    @media ${({ theme }) => theme.device.pc} {
-      font-size: 1.6rem;
-    }
   `,
-  title_xs: () => css`
+  bold_14: () => css`
     font-weight: 700;
     font-size: 1.4rem;
     line-height: normal;
     font-family: var(--font-spoqa-bold);
   `,
-  sub_md: () => css`
+  bold_10: () => css`
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-bold);
+  `,
+
+  medium_16: () => css`
     font-weight: 500;
     font-size: 1.6rem;
     line-height: normal;
     font-family: var(--font-spoqa-medium);
   `,
-  sub_sm: () => css`
+  medium_14: () => css`
     font-weight: 500;
     font-size: 1.4rem;
     line-height: normal;
     font-family: var(--font-spoqa-medium);
   `,
-  text_md: () => css`
+  regular_16: () => css`
     font-weight: 400;
     font-size: 1.6rem;
     line-height: normal;
     font-family: var(--font-spoqa-regular);
   `,
-  text_sm: () => css`
+  regular_14: () => css`
     font-weight: 400;
     font-size: 1.4rem;
     line-height: normal;
     font-family: var(--font-spoqa-regular);
   `,
-  caption: () => css`
+  regular_12: () => css`
     font-weight: 400;
     font-size: 1.2rem;
     line-height: normal;
