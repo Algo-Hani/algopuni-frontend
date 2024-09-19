@@ -7,6 +7,7 @@ export const color = {
   hint: '#A9A9A9',
   placeholder: '#CCCCCC',
   white: '#FFFFFF',
+  error: '#E91212',
 } as const;
 
 export type ColorType = typeof color;

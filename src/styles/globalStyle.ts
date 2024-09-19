@@ -3,10 +3,6 @@ import reset from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-
-
-
-
   * {
     box-sizing: border-box;
     padding: 0;
@@ -37,6 +33,11 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
+  input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 1000px white inset;
+	box-shadow: 0 0 0 1000px white inset;
+  }
+  
   .noScroll {
     overflow: hidden;
     height: 100vh;
