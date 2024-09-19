@@ -42,3 +42,10 @@ export const grayButtonColor = css`
   border: 1px solid ${({ theme }) => theme.color.outline};
   color: ${({ theme }) => theme.color.text};
 `;
+
+// 회 - 회 - 회
+export const disableButtonColor = css`
+  background-color: ${({ theme }) => theme.color.outline};
+  border: 1px solid ${({ theme }) => theme.color.outline};
+  color: ${({ theme }) => theme.color.hint};
+`;

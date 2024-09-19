@@ -1,9 +1,14 @@
 import React from 'react';
 import { NextPage } from 'next';
-import Login from '@/features/login/components/Login';
+import Account from '@/features/account/components/Account';
+import Login from '@/features/account/components/login/Login';
 
 const LoginPage: NextPage = () => {
-  return <Login />;
+  return (
+    <Account>
+      <Login />
+    </Account>
+  );
 };
 
 export default LoginPage;
