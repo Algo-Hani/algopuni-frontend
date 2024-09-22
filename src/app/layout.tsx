@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import AppProvider from '@/libs/AppProvider';
+import LayoutContent from '@/components/layouts/LayoutContainer';
 
 const spoqaBold = localFont({
   src: './fonts/SpoqaHanSansNeo-Bold.woff',
@@ -32,7 +33,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${spoqaBold.variable} ${spoqaMedium.variable} ${spoqaRegular.variable}`}>
         <AppProvider>
-          <main>{children}</main>
+          <LayoutContent>{children}</LayoutContent>
         </AppProvider>
       </body>
     </html>
