@@ -44,3 +44,26 @@ export const FuncBtn = styled.button`
     ${disableButtonColor}
   }
 `;
+export const EmailResend = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  ${({ theme }) => theme.font.regular_10};
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: ${({ theme }) => theme.color.hint};
+  }
+  > button {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.color.primary};
+    &:disabled {
+      color: ${({ theme }) => theme.color.hint};
+    }
+  }
+  @media ${({ theme }) => theme.device.pc} {
+    ${({ theme }) => theme.font.regular_12};
+  }
+`;
