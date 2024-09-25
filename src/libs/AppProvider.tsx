@@ -9,10 +9,7 @@ const AppProvider = ({ children }: PropsWithChildren) => {
   return (
     <Recoil>
       <StyledComponentsRegistry>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          {children}
-        </ThemeProvider>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </StyledComponentsRegistry>
     </Recoil>
   );

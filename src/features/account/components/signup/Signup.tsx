@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CustomInput } from '@/components/form';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { sinUpSchema } from '../../schema';
 import { SignUpInputs } from '../../types';
+import { accountApis } from '../../apis';
+import { Info } from '@/assets';
+import { Toast } from '@/libs/ToastProvider';
+import { useRouter } from 'next/navigation';
 import * as S from './Signup.styled';
+import { useRecoilValue } from 'recoil';
+import { authAccessTokenState } from '@/atoms/auth';
 
 const Signup = () => {
-  const [isCodeActive, setIsCodeActive] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -18,13 +24,81 @@ const Signup = () => {
   } = useForm<SignUpInputs>({
     resolver: yupResolver(sinUpSchema),
   });
-
   const timerInitialState = { minute: 3, seconds: 0 };
   const [timer, setTimer] = useState(timerInitialState);
   const [timerStart, setTimerStart] = useState(false);
+  const [inputCode, setInputCode] = useState('');
+  const [isCodeActive, setIsCodeActive] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false);
 
-  const onCliCkCheckEmail = () => {};
-  const onClickSignUp: SubmitHandler<SignUpInputs> = (data) => {};
+  const onCliCkCheckEmail = (isResend?: boolean) => {
+    const data = {
+      email: watch().email,
+    };
+    const sendEmailHandler = async () => {
+      try {
+        await accountApis.authSendCode(data).then((res) => {
+          if (res.data.status === 'SUCCESS') {
+            if (isResend) {
+              setTimer(timerInitialState);
+            } else {
+              setIsCodeActive(true);
+              setTimerStart(true);
+            }
+          }
+        });
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
+      }
+    };
+    sendEmailHandler();
+  };
+  const onCliCkCheckCode = () => {
+    const data = {
+      email: watch().email,
+      code: inputCode,
+    };
+    const sendCodeHandler = async () => {
+      try {
+        await accountApis.authVerifyCode(data).then((res) => {
+          if (res.data.status === 'SUCCESS') {
+            setIsConfirm(true);
+            setIsCodeActive(false);
+          }
+        });
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
+      }
+    };
+    sendCodeHandler();
+  };
+  const onClickSignUp: SubmitHandler<SignUpInputs> = (data) => {
+    const signupHandler = async () => {
+      try {
+        await accountApis.authSignup(data).then((res) => {
+          if (res.data.status === 'SUCCESS') {
+            Toast.success('회원가입이 완료되었습니다.');
+            router.push('/login');
+          }
+        });
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
+      }
+    };
+
+    if (!isConfirm) {
+      Toast.error('이메일 인증을 완료해 주세요');
+      return;
+    } else {
+      signupHandler();
+    }
+  };
 
   return (
     <>
@@ -34,8 +108,8 @@ const Signup = () => {
           tag='닉네임'
           placeholder='닉네임을 입력해 주세요'
           info='4~10자 영문(대소문자 구분), 한글, 숫자 조합'
-          register={register('nickName')}
-          error={errors.nickName?.message}
+          register={register('nickname')}
+          error={errors.nickname?.message}
           maxLength={10}
         />
         <div>
@@ -43,25 +117,40 @@ const Signup = () => {
             {!isCodeActive && (
               <S.FuncBtn
                 type='button'
-                onClick={() => setIsCodeActive(true)}
+                onClick={() => onCliCkCheckEmail(false)}
                 disabled={!/^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,3})+$/.test(watch().email)}
               >
-                중복확인
+                인증 코드
               </S.FuncBtn>
             )}
           </CustomInput>
           {isCodeActive && (
-            <CustomInput
-              placeholder='인증코드를 입력해 주세요'
-              info='이메일로 전성된 인증코드를 입력해주세요'
-              timer={timer}
-              setTimer={setTimer}
-              timerStart={timerStart}
-            >
-              <S.FuncBtn type='button' onClick={() => setIsCodeActive(false)}>
-                확인
-              </S.FuncBtn>
-            </CustomInput>
+            <>
+              <CustomInput
+                placeholder='인증코드를 입력해 주세요'
+                info='이메일로 전성된 인증코드를 입력해주세요'
+                timer={timer}
+                setTimer={setTimer}
+                timerStart={timerStart}
+                onChange={(e) => setInputCode(e.target.value)}
+                value={inputCode}
+              >
+                <S.FuncBtn type='button' onClick={onCliCkCheckCode}>
+                  확인
+                </S.FuncBtn>
+              </CustomInput>
+
+              <S.EmailResend>
+                <div>
+                  <Info width={16} height={16} fill='#A9A9A9' />
+                  인증코드를 받지 못하셨나요?
+                </div>
+
+                <button type='button' onClick={() => onCliCkCheckEmail(true)} disabled={timer.minute > 1}>
+                  인증코드 재전송
+                </button>
+              </S.EmailResend>
+            </>
           )}
         </div>
         <CustomInput
@@ -79,8 +168,8 @@ const Signup = () => {
           placeholder='비밀번호를 다시 한번 입력해 주세요'
           isPrivate
           inputType='password'
-          register={register('confirmPassword')}
-          error={errors.confirmPassword?.message}
+          register={register('passwordConfirm')}
+          error={errors.passwordConfirm?.message}
           maxLength={18}
         />
         <S.SignupBtn type='submit'>회원가입</S.SignupBtn>
