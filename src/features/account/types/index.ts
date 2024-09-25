@@ -1,6 +1,11 @@
 export type SignUpInputs = {
-  nickName: string;
+  nickname: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  passwordConfirm: string;
+};
+
+export type LoginInputs = {
+  id: string;
+  password: string;
 };

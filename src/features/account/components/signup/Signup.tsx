@@ -9,9 +9,13 @@ import { SignUpInputs } from '../../types';
 import { accountApis } from '../../apis';
 import { Info } from '@/assets';
 import { Toast } from '@/libs/ToastProvider';
+import { useRouter } from 'next/navigation';
 import * as S from './Signup.styled';
+import { useRecoilValue } from 'recoil';
+import { authAccessTokenState } from '@/atoms/auth';
 
 const Signup = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -20,7 +24,6 @@ const Signup = () => {
   } = useForm<SignUpInputs>({
     resolver: yupResolver(sinUpSchema),
   });
-
   const timerInitialState = { minute: 3, seconds: 0 };
   const [timer, setTimer] = useState(timerInitialState);
   const [timerStart, setTimerStart] = useState(false);
@@ -28,23 +31,29 @@ const Signup = () => {
   const [isCodeActive, setIsCodeActive] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
 
-  const onCliCkCheckEmail = () => {
+  const onCliCkCheckEmail = (isResend?: boolean) => {
     const data = {
       email: watch().email,
     };
-    const sendCodeHandler = async () => {
+    const sendEmailHandler = async () => {
       try {
         await accountApis.authSendCode(data).then((res) => {
-          if (res.data.statusCode === 200) {
-            setIsCodeActive(true);
-            setTimerStart(true);
+          if (res.data.status === 'SUCCESS') {
+            if (isResend) {
+              setTimer(timerInitialState);
+            } else {
+              setIsCodeActive(true);
+              setTimerStart(true);
+            }
           }
         });
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
       }
     };
-    sendCodeHandler();
+    sendEmailHandler();
   };
   const onCliCkCheckCode = () => {
     const data = {
@@ -54,7 +63,7 @@ const Signup = () => {
     const sendCodeHandler = async () => {
       try {
         await accountApis.authVerifyCode(data).then((res) => {
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 'SUCCESS') {
             setIsConfirm(true);
             setIsCodeActive(false);
           }
@@ -67,11 +76,30 @@ const Signup = () => {
     };
     sendCodeHandler();
   };
-  const onClickSignUp: SubmitHandler<SignUpInputs> = (data) => {};
+  const onClickSignUp: SubmitHandler<SignUpInputs> = (data) => {
+    const signupHandler = async () => {
+      try {
+        await accountApis.authSignup(data).then((res) => {
+          if (res.data.status === 'SUCCESS') {
+            Toast.success('회원가입이 완료되었습니다.');
+            router.push('/login');
+          }
+        });
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
+      }
+    };
 
-  useEffect(() => {
-    Toast.error('인증번호가 일치하지 않습니다.');
-  }, []);
+    if (!isConfirm) {
+      Toast.error('이메일 인증을 완료해 주세요');
+      return;
+    } else {
+      signupHandler();
+    }
+  };
+
   return (
     <>
       <h1>회원가입</h1>
@@ -80,8 +108,8 @@ const Signup = () => {
           tag='닉네임'
           placeholder='닉네임을 입력해 주세요'
           info='4~10자 영문(대소문자 구분), 한글, 숫자 조합'
-          register={register('nickName')}
-          error={errors.nickName?.message}
+          register={register('nickname')}
+          error={errors.nickname?.message}
           maxLength={10}
         />
         <div>
@@ -89,7 +117,7 @@ const Signup = () => {
             {!isCodeActive && (
               <S.FuncBtn
                 type='button'
-                onClick={onCliCkCheckEmail}
+                onClick={() => onCliCkCheckEmail(false)}
                 disabled={!/^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,3})+$/.test(watch().email)}
               >
                 인증 코드
@@ -118,12 +146,7 @@ const Signup = () => {
                   인증코드를 받지 못하셨나요?
                 </div>
 
-                <button
-                  onClick={() => {
-                    onCliCkCheckEmail();
-                  }}
-                  disabled={timer.minute > 2}
-                >
+                <button type='button' onClick={() => onCliCkCheckEmail(true)} disabled={timer.minute > 1}>
                   인증코드 재전송
                 </button>
               </S.EmailResend>
@@ -145,8 +168,8 @@ const Signup = () => {
           placeholder='비밀번호를 다시 한번 입력해 주세요'
           isPrivate
           inputType='password'
-          register={register('confirmPassword')}
-          error={errors.confirmPassword?.message}
+          register={register('passwordConfirm')}
+          error={errors.passwordConfirm?.message}
           maxLength={18}
         />
         <S.SignupBtn type='submit'>회원가입</S.SignupBtn>

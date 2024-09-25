@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const sinUpSchema = yup.object().shape({
-  nickName: yup
+  nickname: yup
     .string()
     .matches(/^[A-Za-z가-힣\d]{4,10}$/, '올바른 닉네임 형식을 입력하세요')
     .required('닉네임은 필수항목이에요'),
@@ -17,7 +17,7 @@ export const sinUpSchema = yup.object().shape({
     .matches(/\d/, '비밀번호에는 1개 이상의 숫자가 포함되어야 해요')
     .matches(/[!@#$%^&*()_+]/, '비밀번호에는 1개 이상의 특수문자가 포함되어야 해요')
     .required('비밀번호는 필수항목이에요'),
-  confirmPassword: yup
+  passwordConfirm: yup
     .string()
     .oneOf([yup.ref('password')], '비밀번호가 일치하지 않아요')
     .required('비밀번호를 다시 입력해 주세요'),
