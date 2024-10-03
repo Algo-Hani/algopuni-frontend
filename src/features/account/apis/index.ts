@@ -1,7 +1,5 @@
-import useAxiosInstance from '@/apis/axios';
+import instance from '@/apis/axios';
 import { LoginInputs, SignUpInputs } from '../types';
-
-const instance = useAxiosInstance();
 
 export const accountApis = {
   authSignup: (data: SignUpInputs) => instance.post(`/auth/signup`, data),

@@ -10,6 +10,7 @@ import { accountApis } from '../../apis';
 import { Toast } from '@/libs/ToastProvider';
 import { useSetRecoilState } from 'recoil';
 import { authAccessTokenState } from '@/atoms/auth';
+import instance from '@/apis/axios';
 import * as S from './Login.styled';
 
 const Login = () => {
@@ -22,6 +23,7 @@ const Login = () => {
       try {
         await accountApis.authLogin(data).then((res) => {
           if (res.data.status === 'SUCCESS') {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.data.accessToken}`;
             setAccessToken(res.data.data.accessToken);
             Toast.success('로그인이 완료되었습니다.');
             router.push('/');
