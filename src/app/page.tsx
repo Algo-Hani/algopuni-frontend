@@ -1,4 +1,4 @@
-import Main from '@/features/main/Main';
+import Main from '@/features/main/components/Main';
 
 export default function MainPage() {
   return <Main />;

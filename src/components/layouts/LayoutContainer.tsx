@@ -22,26 +22,16 @@ export default function LayoutContent({ children }: LayoutContentProps) {
 
   useEffect(() => {
     const refreshTokenCheck = async () => {
-      const isRefreshToke = cookies.get('USER_REFRESH_TOKEN' ?? null);
-      console.log(isRefreshToke);
-      if (isRefreshToke) {
-        try {
-          await accountApis.authRefresh().then((res) => {
-            if (res.data.status === 'SUCCESS') {
-              console.log(res.data.data.accessToken);
-              //  instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.data.accessToken}`;
-              //  setAccessToken(res.data.data.accessToken);
-              //  Toast.success('로그인이 완료되었습니다.');
-              //  router.push('/');
-            }
-          });
-        } catch (err: any) {
-          Toast.error(
-            err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
-          );
-        }
-      } else {
-        console.log('none-refreshToken');
+      try {
+        await accountApis.authRefresh().then((res) => {
+          if (res.data.status === 'SUCCESS') {
+            console.log(res.data.data.accessToken);
+          }
+        });
+      } catch (err: any) {
+        Toast.error(
+          err.response.data.message ? err.response.data.message : '에러가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+        );
       }
     };
     refreshTokenCheck();
