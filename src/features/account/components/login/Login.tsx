@@ -1,23 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CustomInput } from '@/components/form';
-import * as S from './Login.styled';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LoginInputs } from '../../types';
 import { accountApis } from '../../apis';
 import { Toast } from '@/libs/ToastProvider';
 import { useSetRecoilState } from 'recoil';
 import { authAccessTokenState } from '@/atoms/auth';
+import * as S from './Login.styled';
 
 const Login = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<LoginInputs>();
 
-  const [inputEmail, setInputEmail] = useState('');
-  const [inputPassword, setInputPassword] = useState('');
   const setAccessToken = useSetRecoilState(authAccessTokenState);
   const onClickLogin: SubmitHandler<LoginInputs> = (data) => {
     const loginHandler = async () => {

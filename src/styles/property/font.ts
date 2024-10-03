@@ -38,6 +38,24 @@ export const font = {
     font-family: var(--font-spoqa-bold);
   `,
 
+  medium_24: () => css`
+    font-weight: 500;
+    font-size: 2.4rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-medium);
+  `,
+  medium_20: () => css`
+    font-weight: 500;
+    font-size: 2rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-medium);
+  `,
+  medium_18: () => css`
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-medium);
+  `,
   medium_16: () => css`
     font-weight: 500;
     font-size: 1.6rem;

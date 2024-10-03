@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
-export const isSitemapOpenState = atom<boolean>({
-  key: 'isSitemapOpen',
+export const isMobileMenuOpenState = atom<boolean>({
+  key: 'isMobileMenuOpen',
   default: false,
 });
 export const activeMobileSitemapState = atom<null | string>({

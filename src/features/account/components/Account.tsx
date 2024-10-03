@@ -5,6 +5,7 @@ import { ArrowBackIos, Logo_w } from '@/assets';
 import { useRouter } from 'next/navigation';
 import { useResponsive } from '@/hooks/useResponsive';
 import * as S from './Account.styled';
+import Link from 'next/link';
 
 type Props = {
   children: ReactNode;
@@ -19,7 +20,9 @@ const Account = ({ children }: Props) => {
         <button onClick={() => router.push('/')}>
           <ArrowBackIos width={isPC ? 32 : 24} height={isPC ? 32 : 24} fill='#FFFFFF' />
         </button>
-        <Logo_w width={300} height={128} />
+        <Link href={'/'}>
+          <Logo_w width={isPC ? 260 : 180} height={isPC ? 116 : 100} />
+        </Link>
       </div>
       <div className='login_body'>{children}</div>
     </S.AccountContainer>

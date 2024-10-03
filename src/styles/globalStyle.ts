@@ -23,6 +23,10 @@ const GlobalStyle = createGlobalStyle`
     color: #1e1e1e; 
   }
 
+  main{
+    min-height: 100vh;
+  }
+
   a {
     color: inherit;
     text-decoration: none;
