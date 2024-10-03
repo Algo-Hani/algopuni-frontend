@@ -1,7 +1,7 @@
 import React from 'react';
 import { Login, Logo, Menu, Person } from '@/assets';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useRecoilState } from 'recoil';
 import { isMobileMenuOpenState } from '@/atoms/layout';
 import { useHeaderScroll } from '@/hooks/useHeaderScroll';
@@ -10,6 +10,7 @@ import MenuBtn from './menuBtn/MenuBtn';
 import * as S from './Header.styled';
 
 const Header = () => {
+  const pathname = usePathname();
   const { isPC } = useResponsive();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useRecoilState(isMobileMenuOpenState);
@@ -26,17 +27,17 @@ const Header = () => {
             <>
               <S.Menu>
                 <ul>
-                  <S.MenuItem>
+                  <S.MenuItem $isLocate={pathname.startsWith('/learn')}>
                     <Link href={'/learn'}>
                       <p>코딩테스트</p>
                     </Link>
                   </S.MenuItem>
-                  <S.MenuItem>
+                  <S.MenuItem $isLocate={pathname.startsWith('/career')}>
                     <Link href={'/career'}>
                       <p>채용</p>
                     </Link>
                   </S.MenuItem>
-                  <S.MenuItem>
+                  <S.MenuItem $isLocate={pathname.startsWith('/rank')}>
                     <Link href={'/rank'}>
                       <p>랭킹</p>
                     </Link>
