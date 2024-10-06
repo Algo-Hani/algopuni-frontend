@@ -16,13 +16,13 @@ export const Menu = styled.div`
     height: 100%;
   }
 `;
-export const MenuItem = styled.li`
+export const MenuItem = styled.li<{ $isLocate: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-  color: ${({ theme }) => theme.color.hint};
+  color: ${({ $isLocate, theme }) => ($isLocate ? theme.color.base : theme.color.hint)};
   ${({ theme }) => theme.font.medium_18};
   > p {
     display: flex;

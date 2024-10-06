@@ -70,7 +70,7 @@ export const Social = styled.div`
   justify-content: center;
   gap: 15px;
   margin-top: 50px;
-  > button > img {
+  > a > img {
     width: 52px;
     height: 52px;
   }

@@ -22,7 +22,6 @@ export default function ToastProvider({ children }: Props) {
         pauseOnHover={false}
         limit={1}
       />
-      `;
     </>
   );
 }
