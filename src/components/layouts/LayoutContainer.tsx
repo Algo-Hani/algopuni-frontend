@@ -8,6 +8,9 @@ import { useResponsive } from '@/hooks/useResponsive';
 import Cookies from 'universal-cookie';
 import { accountApis } from '@/features/account/apis';
 import { Toast } from '@/libs/ToastProvider';
+import instance from '@/apis/axios';
+import { authAccessTokenState } from '@/atoms/auth';
+import { useSetRecoilState } from 'recoil';
 
 interface LayoutContentProps {
   children: ReactNode;
@@ -15,17 +18,25 @@ interface LayoutContentProps {
 
 export default function LayoutContent({ children }: LayoutContentProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const setAccessToken = useSetRecoilState(authAccessTokenState);
   const cookies = new Cookies();
   const pathname = usePathname();
-  const SINGLE_LAYOUT = ['/login', '/signup'];
   const { isPC } = useResponsive();
+  const refreshToken = cookies.get('USER_REFRESH_TOKEN' || null);
+  const SINGLE_LAYOUT = ['/login', '/signup', '/oauth2-login-success'];
 
   useEffect(() => {
+    setIsMounted(true);
+
     const refreshTokenCheck = async () => {
+      const data = {
+        refreshToken,
+      };
       try {
-        await accountApis.authRefresh().then((res) => {
+        await accountApis.authRefresh(data).then((res) => {
           if (res.data.status === 'SUCCESS') {
-            console.log(res.data.data.accessToken);
+            instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.data.token}`;
+            setAccessToken(res.data.data.token);
           }
         });
       } catch (err: any) {
@@ -34,13 +45,9 @@ export default function LayoutContent({ children }: LayoutContentProps) {
         );
       }
     };
-    if (cookies.get('USER_REFRESH_TOKEN')) {
+    if (refreshToken) {
       refreshTokenCheck();
     }
-  }, []);
-
-  useEffect(() => {
-    setIsMounted(true);
   }, []);
 
   if (!isMounted) {

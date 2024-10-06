@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { isMobileMenuOpenState } from '@/atoms/layout';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import Link from 'next/link';
 import { Logout } from '@/assets';
 import { accountApis } from '@/features/account/apis';
@@ -8,13 +8,14 @@ import { useRouter } from 'next/navigation';
 import { authAccessTokenState } from '@/atoms/auth';
 import { Toast } from '@/libs/ToastProvider';
 import instance from '@/apis/axios';
+import Cookies from 'universal-cookie';
 import * as S from './MobileMenu.styled';
 
 const MobileMenu = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
-  const setAccessToken = useSetRecoilState(authAccessTokenState);
-  const accessToken = useRecoilValue(authAccessTokenState);
+  const cookies = new Cookies();
+  const [accessToken, setAccessToken] = useRecoilState(authAccessTokenState);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useRecoilState(isMobileMenuOpenState);
   const router = useRouter();
 
@@ -25,6 +26,7 @@ const MobileMenu = () => {
           if (res.data.status === 'SUCCESS') {
             setAccessToken(null);
             instance.defaults.headers.common['Authorization'] = '';
+            cookies.remove('USER_REFRESH_TOKEN');
             Toast.success('로그아웃이 완료되었습니다.');
             router.push('/login');
           }
@@ -68,22 +70,35 @@ const MobileMenu = () => {
             </S.MenuItem>
           </S.MenuList>
           <S.AuthMenuList>
-            <S.MenuItem>
-              <Link href={'/login'} onClick={() => setIsMobileMenuOpen(false)}>
-                <p>로그인</p>
-              </Link>
-            </S.MenuItem>
-            <S.MenuItem>
-              <Link href={'/signup'} onClick={() => setIsMobileMenuOpen(false)}>
-                <p>회원가입</p>
-              </Link>
-            </S.MenuItem>
+            {accessToken ? (
+              <S.MenuItem>
+                <Link href={'/login'} onClick={() => setIsMobileMenuOpen(false)}>
+                  <p>마이페이지</p>
+                </Link>
+              </S.MenuItem>
+            ) : (
+              <>
+                <S.MenuItem>
+                  <Link href={'/login'} onClick={() => setIsMobileMenuOpen(false)}>
+                    <p>로그인</p>
+                  </Link>
+                </S.MenuItem>
+                <S.MenuItem>
+                  <Link href={'/signup'} onClick={() => setIsMobileMenuOpen(false)}>
+                    <p>회원가입</p>
+                  </Link>
+                </S.MenuItem>
+              </>
+            )}
           </S.AuthMenuList>
+
           <S.SubMenu>
-            <S.AuthBtn $color='#14142C' onClick={onClickLogout}>
-              <Logout width={18} height={18} fill='#ffffff' />
-              로그아웃
-            </S.AuthBtn>
+            {accessToken && (
+              <S.AuthBtn $color='#14142C' onClick={onClickLogout}>
+                <Logout width={18} height={18} fill='#ffffff' />
+                로그아웃
+              </S.AuthBtn>
+            )}
           </S.SubMenu>
         </div>
       </S.MobileMenu>
