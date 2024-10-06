@@ -11,10 +11,13 @@ import { Toast } from '@/libs/ToastProvider';
 import { useSetRecoilState } from 'recoil';
 import { authAccessTokenState } from '@/atoms/auth';
 import instance from '@/apis/axios';
+import Cookies from 'universal-cookie';
 import * as S from './Login.styled';
+import Link from 'next/link';
 
 const Login = () => {
   const router = useRouter();
+  const cookies = new Cookies();
   const { register, handleSubmit } = useForm<LoginInputs>();
 
   const setAccessToken = useSetRecoilState(authAccessTokenState);
@@ -23,8 +26,12 @@ const Login = () => {
       try {
         await accountApis.authLogin(data).then((res) => {
           if (res.data.status === 'SUCCESS') {
-            instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.data.accessToken}`;
-            setAccessToken(res.data.data.accessToken);
+            cookies.set('USER_REFRESH_TOKEN', res.data.data.refreshToken.token, {
+              path: '/',
+            });
+            console.log(res.data);
+            instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.data.accessToken.token}`;
+            setAccessToken(res.data.data.accessToken.token);
             Toast.success('로그인이 완료되었습니다.');
             router.push('/');
           }
@@ -62,9 +69,9 @@ const Login = () => {
           <button>비밀번호 찾기</button>
         </S.FindFunc>
         <S.Social>
-          <button>
+          <Link href='https://api.user.algopuni.site/oauth2/authorization/kakao'>
             <Image src={'/images/kakao.png'} width={64} height={64} alt='kakao social login icon' />
-          </button>
+          </Link>
           <button>
             <Image src={'/images/naver.png'} width={64} height={64} alt='kakao social login icon' />
           </button>

@@ -34,7 +34,9 @@ export default function LayoutContent({ children }: LayoutContentProps) {
         );
       }
     };
-    refreshTokenCheck();
+    if (cookies.get('USER_REFRESH_TOKEN')) {
+      refreshTokenCheck();
+    }
   }, []);
 
   useEffect(() => {
