@@ -61,7 +61,7 @@ export const HeaderLayout = styled.div<{
   $isVisible: boolean;
   $isTop: boolean;
 }>`
-  position: fixed;
+  position: relative;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -71,16 +71,9 @@ export const HeaderLayout = styled.div<{
   width: 100%;
   height: 52px;
   background-color: ${({ $isTop }) => ($isTop ? '#ffffff' : 'rgba(255, 255, 255, .5)')};
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   z-index: 10;
 
-  ${({ $isVisible }) =>
-    !$isVisible &&
-    css`
-      transform: translateY(-100%);
-      opacity: 0;
-    `}
-  >button {
+  > button {
     position: absolute;
     top: 50%;
     right: 20px;

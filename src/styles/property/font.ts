@@ -74,6 +74,12 @@ export const font = {
     line-height: normal;
     font-family: var(--font-spoqa-medium);
   `,
+  regular_18: () => css`
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: normal;
+    font-family: var(--font-spoqa-regular);
+  `,
   regular_16: () => css`
     font-weight: 400;
     font-size: 1.6rem;
