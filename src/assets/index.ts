@@ -9,6 +9,11 @@ export { default as Login } from './login.svg';
 export { default as Logout } from './logout.svg';
 export { default as Person } from './person.svg';
 export { default as Menu } from './menu.svg';
+export { default as Grade } from './grade.svg';
+export { default as KeyboardDoubleArrowLeft } from './keyboard_double_arrow_left.svg';
+export { default as KeyboardDoubleArrowRight } from './keyboard_double_arrow_right.svg';
+export { default as KeyboardArrowRight } from './keyboard_arrow_right.svg';
+export { default as KeyboardArrowLeft } from './keyboard_arrow_left.svg';
 
 export { default as Logo } from './logo_base.svg';
 export { default as Logo_w } from './logo_white.svg';

@@ -8,6 +8,7 @@ export const color = {
   placeholder: '#CCCCCC',
   white: '#FFFFFF',
   error: '#E91212',
+  info: '#F9F9F9',
 } as const;
 
 export type ColorType = typeof color;

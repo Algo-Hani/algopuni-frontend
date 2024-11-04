@@ -22,7 +22,7 @@ export default function LayoutContent({ children }: LayoutContentProps) {
   const cookies = new Cookies();
   const pathname = usePathname();
   const { isPC } = useResponsive();
-  const refreshToken = cookies.get('USER_REFRESH_TOKEN' || null);
+  const refreshToken = cookies.get('USER_REFRESH_TOKEN') || null;
   const SINGLE_LAYOUT = ['/login', '/signup', '/oauth2-login-success'];
 
   useEffect(() => {
